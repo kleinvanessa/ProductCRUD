@@ -97,6 +97,7 @@ const ProductList = ({ refresh }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
+            <th>#</th>
             <th>Nome do Produto</th>
             <th>Valor</th>
             <th>Data de Inclusão</th>
@@ -105,8 +106,9 @@ const ProductList = ({ refresh }) => {
         </thead>
         <tbody>
           {products.length > 0 ? (
-            products.map(product => (
+            products.map((product, index) => (
               <tr key={product.id}>
+                <td>{index + 1}</td>
                 <td>{product.name}</td>
                 <td>{product.price.toFixed(2)}</td>
                 <td>
@@ -125,7 +127,7 @@ const ProductList = ({ refresh }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="4">Nenhum produto encontrado</td>
+              <td colSpan="5">Nenhum produto encontrado</td>
             </tr>
           )}
         </tbody>
