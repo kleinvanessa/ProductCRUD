@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Spinner, Alert, Modal, Form, Pagination } from 'react-bootstrap';
+import { Table, Button, Spinner, Alert, Modal, Form, Dropdown } from 'react-bootstrap';
 import API_ENDPOINTS from '../config/apiConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faArrowLeft, faArrowRight, faSort  } from '@fortawesome/free-solid-svg-icons';
 import '../styles/ProductList.css';
 
 const ProductList = ({ refresh }) => {
@@ -15,13 +15,14 @@ const ProductList = ({ refresh }) => {
   const [productToEdit, setProductToEdit] = useState(null);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(10);
+  const [itemsPerPage] = useState(10);
+  const [sortField, setSortField] = useState('dateAdded'); 
+  const [sortOrder, setSortOrder] = useState('asc'); 
 
   useEffect(() => {
     fetchProducts();
-  }, [refresh]);
+  }, [refresh, sortField, sortOrder]);
 
   const fetchProducts = async () => {
     try {
@@ -30,12 +31,28 @@ const ProductList = ({ refresh }) => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      setProducts(data);
+      const sortedData = sortProducts(data);
+      setProducts(sortedData);
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const sortProducts = (products) => {
+    return products.sort((a, b) => {
+      let comparison = 0;
+      if (sortField === 'price') {
+        comparison = a.price - b.price;
+      } else if (sortField === 'dateAdded') {
+        comparison = new Date(a.dateAdded) - new Date(b.dateAdded);
+      } else {
+        comparison = a.name.localeCompare(b.name);
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
   };
 
   const handleDelete = async () => {
@@ -87,15 +104,18 @@ const ProductList = ({ refresh }) => {
     setProductToEdit(null);
   };
 
+  const handleSortChange = (field) => {
+    if (field === sortField) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  const totalPages = Math.ceil(products.length / productsPerPage);
 
   if (loading) {
     return <Spinner animation="border" />;
@@ -105,8 +125,34 @@ const ProductList = ({ refresh }) => {
     return <Alert variant="danger">Erro: {error}</Alert>;
   }
 
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
   return (
     <div className="product-list">
+      <div className="header-controls">
+        <Dropdown className="sort-dropdown">
+          <Dropdown.Toggle variant="light" id="sort-dropdown">
+            Ordenar
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => handleSortChange('name')}>
+              Nome {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleSortChange('price')}>
+              Preço {sortField === 'price' && (sortOrder === 'asc' ? '↑' : '↓')}
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleSortChange('dateAdded')}>
+              Data {sortField === 'dateAdded' && (sortOrder === 'asc' ? '↑' : '↓')}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -121,7 +167,7 @@ const ProductList = ({ refresh }) => {
           {currentProducts.length > 0 ? (
             currentProducts.map((product, index) => (
               <tr key={product.id}>
-                <td>{indexOfFirstProduct + index + 1}</td>
+                <td>{index + 1 + indexOfFirstProduct}</td>
                 <td>{product.name}</td>
                 <td>{product.price.toFixed(2)}</td>
                 <td>
@@ -146,19 +192,34 @@ const ProductList = ({ refresh }) => {
         </tbody>
       </Table>
 
-      <Pagination>
-        <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
-        {[...Array(totalPages).keys()].map(page => (
-          <Pagination.Item
-            key={page + 1}
-            active={page + 1 === currentPage}
-            onClick={() => handlePageChange(page + 1)}
+      <div className="pagination-controls">
+        <Button
+          variant="light"
+          className="pagination-button"
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(currentPage - 1)}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} className="pagination-icon" />
+        </Button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <Button
+            key={index + 1}
+            variant="light"
+            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+            onClick={() => handlePageChange(index + 1)}
           >
-            {page + 1}
-          </Pagination.Item>
+            {index + 1}
+          </Button>
         ))}
-        <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} />
-      </Pagination>
+        <Button
+          variant="light"
+          className="pagination-button"
+          disabled={currentPage === totalPages}
+          onClick={() => handlePageChange(currentPage + 1)}
+        >
+          <FontAwesomeIcon icon={faArrowRight} className="pagination-icon" />
+        </Button>
+      </div>
 
       <Modal show={showConfirmDelete} onHide={handleCloseConfirmDelete}>
         <Modal.Header closeButton>

@@ -1,37 +1,54 @@
 .product-list {
+    padding: 20px;
+  }
+  
+  .header-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+  
+  .sort-dropdown .sort-icon {
+    margin-right: 5px;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
   }
   
-  .table th, .table td {
-    text-align: center;
+  .pagination-button {
+    margin: 0 5px;
   }
   
-  .table th {
-    background-color: #800000; /* Cor vinho forte */
-    color: white;
+  .pagination-button.active {
+    font-weight: bold;
   }
   
-  .table td {
-    vertical-align: middle;
+  .pagination-icon {
+    font-size: 16px;
+    color: #c8102e;
   }
-  
+
   .btn-primary {
-    background-color: #800000; /* Cor vinho forte */
+    background-color: #800000; 
     border-color: #800000;
   }
   
   .btn-primary:hover {
-    background-color: #600000; /* Cor vinho mais escura para hover */
+    background-color: #600000; 
     border-color: #600000;
   }
   
   .btn-danger {
-    background-color: #c82333; /* Vermelho escuro para botão de excluir */
+    background-color: #c82333; 
     border-color: #bd2130;
   }
   
   .btn-danger:hover {
-    background-color: #a71d2a; /* Cor vermelha mais escura para hover */
+    background-color: #a71d2a; 
     border-color: #921b22;
   }
+  
   
