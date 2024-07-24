@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import axios from 'axios';
 import API_ENDPOINTS from '../config/apiConfig.js';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Modal, Button, Form, Container } from 'react-bootstrap';
 
-const ProductForm = ({ productToEdit, setProductToEdit, setKey }) => {
+const AddProduct = ({ setKey }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
@@ -12,22 +12,11 @@ const ProductForm = ({ productToEdit, setProductToEdit, setKey }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  useEffect(() => {
-    if (productToEdit) {
-      setName(productToEdit.name);
-      setPrice(productToEdit.price);
-    }
-  }, [productToEdit]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const productData = { name, price: parseFloat(price) };
-      if (productToEdit) {
-        await axios.put(API_ENDPOINTS.UPDATE_PRODUCT(productToEdit.id), productData);
-      } else {
-        await axios.post(API_ENDPOINTS.CREATE_PRODUCT, productData);
-      }
+      const productData = { name, price: parseFloat(price) };      
+      await axios.post(API_ENDPOINTS.CREATE_PRODUCT, productData);
       setShowSuccess(true);
       handleClear();
     } catch (error) {
@@ -39,14 +28,11 @@ const ProductForm = ({ productToEdit, setProductToEdit, setKey }) => {
   const handleClear = () => {
     setName('');
     setPrice('');
-    if (setProductToEdit) {
-      setProductToEdit(null);
-    }
   };
 
   return (
     <Container className="mt-3">
-      <h1>{productToEdit ? 'Editar Produto' : 'Adicionar Produto'}</h1>
+      <h1>Adicionar Produto</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formProductName">
           <Form.Label>Nome</Form.Label>
@@ -81,7 +67,7 @@ const ProductForm = ({ productToEdit, setProductToEdit, setKey }) => {
         <Modal.Header closeButton>
           <Modal.Title>Sucesso</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Produto {productToEdit ? 'editado' : 'adicionado'} com sucesso!</Modal.Body>
+        <Modal.Body>Produto adicionado com sucesso!</Modal.Body>
       </Modal>
 
       <Modal show={showError} onHide={() => setShowError(false)}>
@@ -99,4 +85,4 @@ const ProductForm = ({ productToEdit, setProductToEdit, setKey }) => {
   );
 };
 
-export default ProductForm;
+export default AddProduct;

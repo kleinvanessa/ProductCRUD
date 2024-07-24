@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, Container } from 'react-bootstrap';
 import ProductList from '../components/ProductList.js';
-import ProductForm from '../components/ProductForm.js';
+import ProductForm from '../components/AddProduct.js';
 import '../styles/HomePage.css';
 
 const HomePage = () => {
