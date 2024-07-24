@@ -19,7 +19,12 @@ namespace ProductAPI.Data
 
             modelBuilder.Entity<Product>()
                 .Property(p => p.Id)
-                .ValueGeneratedOnAdd();           
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.DateAdded)
+                .IsRequired()
+                .HasDefaultValueSql("GETDATE()");
 
             base.OnModelCreating(modelBuilder);
         }
