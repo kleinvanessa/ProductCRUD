@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Spinner, Alert, Modal, Form } from 'react-bootstrap';
 import API_ENDPOINTS from '../config/apiConfig';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import '../styles/ProductList.css';
 
 const ProductList = ({ refresh }) => {
@@ -107,10 +109,17 @@ const ProductList = ({ refresh }) => {
               <tr key={product.id}>
                 <td>{product.name}</td>
                 <td>{product.price.toFixed(2)}</td>
-                <td>{new Date(product.dateAdded).toLocaleDateString()}</td>
                 <td>
-                  <Button variant="danger" onClick={() => openDeleteConfirmation(product)}>Excluir</Button>
-                  <Button variant="primary" onClick={() => openEditModal(product)}>Editar</Button>
+                  {new Date(product.dateAdded).toLocaleDateString()}{' '}
+                  {new Date(product.dateAdded).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </td>
+                <td>
+                  <Button variant="link" onClick={() => openDeleteConfirmation(product)}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
+                  <Button variant="link" onClick={() => openEditModal(product)}>
+                    <FontAwesomeIcon icon={faEdit} />
+                  </Button>
                 </td>
               </tr>
             ))
