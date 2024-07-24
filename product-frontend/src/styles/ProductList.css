@@ -1,0 +1,37 @@
+.product-list {
+    margin-top: 20px;
+  }
+  
+  .table th, .table td {
+    text-align: center;
+  }
+  
+  .table th {
+    background-color: #800000; /* Cor vinho forte */
+    color: white;
+  }
+  
+  .table td {
+    vertical-align: middle;
+  }
+  
+  .btn-primary {
+    background-color: #800000; /* Cor vinho forte */
+    border-color: #800000;
+  }
+  
+  .btn-primary:hover {
+    background-color: #600000; /* Cor vinho mais escura para hover */
+    border-color: #600000;
+  }
+  
+  .btn-danger {
+    background-color: #c82333; /* Vermelho escuro para botão de excluir */
+    border-color: #bd2130;
+  }
+  
+  .btn-danger:hover {
+    background-color: #a71d2a; /* Cor vermelha mais escura para hover */
+    border-color: #921b22;
+  }
+  
