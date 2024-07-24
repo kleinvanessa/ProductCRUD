@@ -27,3 +27,22 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+DECLARE @var0 sysname;
+SELECT @var0 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Product]') AND [c].[name] = N'DateAdded');
+IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [Product] DROP CONSTRAINT [' + @var0 + '];');
+ALTER TABLE [Product] ADD DEFAULT (GETDATE()) FOR [DateAdded];
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240724133827_UpdateDateAdded', N'8.0.7');
+GO
+
+COMMIT;
+GO
+
