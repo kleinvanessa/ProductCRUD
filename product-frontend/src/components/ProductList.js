@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Spinner, Alert, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Spinner, Alert, Modal, Form, Pagination } from 'react-bootstrap';
 import API_ENDPOINTS from '../config/apiConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,9 @@ const ProductList = ({ refresh }) => {
   const [productToEdit, setProductToEdit] = useState(null);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(10);
 
   useEffect(() => {
     fetchProducts();
@@ -84,6 +87,16 @@ const ProductList = ({ refresh }) => {
     setProductToEdit(null);
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
   if (loading) {
     return <Spinner animation="border" />;
   }
@@ -105,10 +118,10 @@ const ProductList = ({ refresh }) => {
           </tr>
         </thead>
         <tbody>
-          {products.length > 0 ? (
-            products.map((product, index) => (
+          {currentProducts.length > 0 ? (
+            currentProducts.map((product, index) => (
               <tr key={product.id}>
-                <td>{index + 1}</td>
+                <td>{indexOfFirstProduct + index + 1}</td>
                 <td>{product.name}</td>
                 <td>{product.price.toFixed(2)}</td>
                 <td>
@@ -132,6 +145,20 @@ const ProductList = ({ refresh }) => {
           )}
         </tbody>
       </Table>
+
+      <Pagination>
+        <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
+        {[...Array(totalPages).keys()].map(page => (
+          <Pagination.Item
+            key={page + 1}
+            active={page + 1 === currentPage}
+            onClick={() => handlePageChange(page + 1)}
+          >
+            {page + 1}
+          </Pagination.Item>
+        ))}
+        <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} />
+      </Pagination>
 
       <Modal show={showConfirmDelete} onHide={handleCloseConfirmDelete}>
         <Modal.Header closeButton>
