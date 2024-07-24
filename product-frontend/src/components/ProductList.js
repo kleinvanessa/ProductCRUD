@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Spinner, Alert, Modal, Form, Dropdown } from 'react-bootstrap';
 import API_ENDPOINTS from '../config/apiConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit, faArrowLeft, faArrowRight, faSort  } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp, faArrowLeft, faArrowRight, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import '../styles/ProductList.css';
 
 const ProductList = ({ refresh }) => {
@@ -17,8 +18,8 @@ const ProductList = ({ refresh }) => {
   const [price, setPrice] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [sortField, setSortField] = useState('dateAdded'); 
-  const [sortOrder, setSortOrder] = useState('asc'); 
+  const [sortField, setSortField] = useState('Name');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchProducts();
@@ -50,7 +51,6 @@ const ProductList = ({ refresh }) => {
       } else {
         comparison = a.name.localeCompare(b.name);
       }
-
       return sortOrder === 'asc' ? comparison : -comparison;
     });
   };
@@ -133,95 +133,104 @@ const ProductList = ({ refresh }) => {
 
   return (
     <div className="product-list">
-      <div className="header-controls">
-        <Dropdown className="sort-dropdown">
-          <Dropdown.Toggle variant="light" id="sort-dropdown">
-            Ordenar
-          </Dropdown.Toggle>
+      {products.length > 0 ? (
+        <>
+          <div className="header-controls">
+            <Dropdown className="sort-dropdown">
+              <Dropdown.Toggle variant="light" id="sort-dropdown">
+                Ordenar
+              </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => handleSortChange('name')}>
-              Nome {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleSortChange('price')}>
-              Preço {sortField === 'price' && (sortOrder === 'asc' ? '↑' : '↓')}
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => handleSortChange('dateAdded')}>
-              Data {sortField === 'dateAdded' && (sortOrder === 'asc' ? '↑' : '↓')}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </div>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => handleSortChange('name')}>
+                  Nome {sortField === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleSortChange('price')}>
+                  Preço {sortField === 'price' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => handleSortChange('dateAdded')}>
+                  Data {sortField === 'dateAdded' && (sortOrder === 'asc' ? '↑' : '↓')}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nome do Produto</th>
-            <th>Valor</th>
-            <th>Data de Inclusão</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentProducts.length > 0 ? (
-            currentProducts.map((product, index) => (
-              <tr key={product.id}>
-                <td>{index + 1 + indexOfFirstProduct}</td>
-                <td>{product.name}</td>
-                <td>{product.price.toFixed(2)}</td>
-                <td>
-                  {new Date(product.dateAdded).toLocaleDateString()}{' '}
-                  {new Date(product.dateAdded).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </td>
-                <td>
-                  <Button variant="link" onClick={() => openDeleteConfirmation(product)}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </Button>
-                  <Button variant="link" onClick={() => openEditModal(product)}>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </Button>
-                </td>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nome do Produto</th>
+                <th>Valor</th>
+                <th>Data de Inclusão</th>
+                <th>Ações</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">Nenhum produto encontrado</td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {currentProducts.length > 0 ? (
+                currentProducts.map((product, index) => (
+                  <tr key={product.id}>
+                    <td>{index + 1 + indexOfFirstProduct}</td>
+                    <td>{product.name}</td>
+                    <td>{product.price.toFixed(2)}</td>
+                    <td>
+                      {new Date(product.dateAdded).toLocaleDateString()}{' '}
+                      {new Date(product.dateAdded).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td>
+                      <Button variant="link" onClick={() => openDeleteConfirmation(product)}>
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Button>
+                      <Button variant="link" onClick={() => openEditModal(product)}>
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">Nenhum produto encontrado</td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
 
-      <div className="pagination-controls">
-        <Button
-          variant="light"
-          className="pagination-button"
-          disabled={currentPage === 1}
-          onClick={() => handlePageChange(currentPage - 1)}
-        >
-          <FontAwesomeIcon icon={faArrowLeft} className="pagination-icon" />
-        </Button>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            variant="light"
-            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-        <Button
-          variant="light"
-          className="pagination-button"
-          disabled={currentPage === totalPages}
-          onClick={() => handlePageChange(currentPage + 1)}
-        >
-          <FontAwesomeIcon icon={faArrowRight} className="pagination-icon" />
-        </Button>
-      </div>
+          <div className="pagination-controls">
+            <Button
+              variant="light"
+              className="pagination-button"
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} className="pagination-icon" />
+            </Button>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                variant="light"
+                className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+            <Button
+              variant="light"
+              className="pagination-button"
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              <FontAwesomeIcon icon={faArrowRight} className="pagination-icon" />
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div className="no-products">
+          <img src="/images/no-products.svg" alt="No products" />
+          <p>Nenhum produto encontrado</p>
+        </div>
+      )}
 
-      <Modal show={showConfirmDelete} onHide={handleCloseConfirmDelete}>
+    <Modal show={showConfirmDelete} onHide={handleCloseConfirmDelete}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmação de Exclusão</Modal.Title>
         </Modal.Header>
@@ -243,7 +252,7 @@ const ProductList = ({ refresh }) => {
           <Modal.Title>Editar Produto</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={(e) => { e.preventDefault(); handleEdit(); }}>
+        <Form onSubmit={(e) => { e.preventDefault(); handleEdit(); }}>
             <Form.Group controlId="formProductName">
               <Form.Label>Nome</Form.Label>
               <Form.Control

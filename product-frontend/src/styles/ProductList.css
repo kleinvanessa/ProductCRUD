@@ -50,5 +50,18 @@
     background-color: #a71d2a; 
     border-color: #921b22;
   }
+
+  .no-products {
+    text-align: center;
+    font-size: 1.2em;
+    color: #921b22;
+    margin-top: 50px;
+  }
   
+  .no-products img {
+    width: 200px; 
+    height: auto;
+    display: block;
+    margin: 0 auto 20px auto;
+  }
   
