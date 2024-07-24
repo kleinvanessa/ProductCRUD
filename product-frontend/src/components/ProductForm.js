@@ -2,64 +2,100 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import API_ENDPOINTS from '../config/apiConfig.js';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Modal, Button, Form, Container } from 'react-bootstrap';
 
-const ProductForm = ({ productToEdit, setProductToEdit }) => {
+const ProductForm = ({ productToEdit, setProductToEdit, setKey }) => {
   const [name, setName] = useState('');
-  const [value, setValue] = useState('');
+  const [price, setPrice] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
     if (productToEdit) {
-      setName(productToEdit.Nome);
-      setValue(productToEdit.Valor);
+      setName(productToEdit.name);
+      setPrice(productToEdit.price);
     }
   }, [productToEdit]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const productData = { name, price: parseFloat(price) };
       if (productToEdit) {
-        await axios.put(API_ENDPOINTS.UPDATE_PRODUCT(productToEdit.IdProduto), { Nome: name, Valor: value });
+        await axios.put(API_ENDPOINTS.UPDATE_PRODUCT(productToEdit.id), productData);
       } else {
-        await axios.post(API_ENDPOINTS.CREATE_PRODUCT, { Nome: name, Valor: value });
+        await axios.post(API_ENDPOINTS.CREATE_PRODUCT, productData);
       }
-      navigate('/products');
+      setShowSuccess(true);
+      handleClear();
     } catch (error) {
       console.error('Error saving product:', error);
+      setShowError(true);
+    }
+  };
+
+  const handleClear = () => {
+    setName('');
+    setPrice('');
+    if (setProductToEdit) {
+      setProductToEdit(null);
     }
   };
 
   return (
-    <div className="container mt-3">
+    <Container className="mt-3">
       <h1>{productToEdit ? 'Editar Produto' : 'Adicionar Produto'}</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Nome</label>
-          <input
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formProductName">
+          <Form.Label>Nome</Form.Label>
+          <Form.Control
             type="text"
-            className="form-control"
-            id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="value">Valor</label>
-          <input
+        </Form.Group>
+
+        <Form.Group controlId="formProductPrice">
+          <Form.Label>Valor</Form.Label>
+          <Form.Control
             type="number"
-            className="form-control"
-            id="value"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            step="0.01"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
             required
           />
-        </div>
-        <button type="submit" className="btn btn-primary">Salvar</button>
-        <button type="button" className="btn btn-secondary ml-2" onClick={() => navigate('/')}>Fechar</button>
-      </form>
-    </div>
+        </Form.Group>
+
+        <Button variant="primary" type="submit">
+          Salvar
+        </Button>
+        <Button variant="secondary" className="ml-2" onClick={handleClear}>
+          Limpar
+        </Button>
+      </Form>
+
+      <Modal show={showSuccess} onHide={() => setShowSuccess(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Sucesso</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Produto {productToEdit ? 'editado' : 'adicionado'} com sucesso!</Modal.Body>
+      </Modal>
+
+      <Modal show={showError} onHide={() => setShowError(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Erro</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Ocorreu um erro ao salvar o produto. Tente novamente.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={() => setShowError(false)}>
+            Fechar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 };
 

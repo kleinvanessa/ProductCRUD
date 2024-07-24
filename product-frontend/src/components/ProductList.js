@@ -3,14 +3,14 @@ import { Table, Button, Spinner, Alert } from 'react-bootstrap';
 import API_ENDPOINTS from '../config/apiConfig';
 import '../styles/ProductList.css';
 
-const ProductList = () => {
+const ProductList = ({ refresh }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [refresh]);
 
   const fetchProducts = async () => {
     try {
