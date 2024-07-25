@@ -24,6 +24,7 @@ yarn-error.log*
 # IDE/editor directories
 .idea/
 .vscode/
+.vs/
 
 # Operating system files
 .DS_Store
