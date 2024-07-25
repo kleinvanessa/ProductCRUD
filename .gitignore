@@ -31,3 +31,16 @@ Thumbs.db
 
 # TypeScript cache (if using TypeScript)
 *.tsbuildinfo
+
+# 
+applicationhost.config
+.suo
+
+# File layout Visual Studio
+DocumentLayout.json
+
+# temp file
+
+*.tmp
+*.swp
+

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Spinner, Alert, Modal, Form, Dropdown } from 'react-bootstrap';
-import API_ENDPOINTS from '../config/apiConfig';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faArrowUp, faArrowLeft, faArrowRight, faSort } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faSort } from '@fortawesome/free-solid-svg-icons';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import '../styles/ProductList.css';
+import { getProducts, editProduct, removeProduct } from '../services/ProductService';
 
 const ProductList = ({ refresh }) => {
   const [products, setProducts] = useState([]);
@@ -26,12 +26,9 @@ const ProductList = ({ refresh }) => {
   }, [refresh, sortField, sortOrder]);
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
-      const response = await fetch(API_ENDPOINTS.GET_ALL_PRODUCTS);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
+      const data = await getProducts();
       const sortedData = sortProducts(data);
       setProducts(sortedData);
     } catch (error) {
@@ -57,7 +54,7 @@ const ProductList = ({ refresh }) => {
 
   const handleDelete = async () => {
     try {
-      await fetch(API_ENDPOINTS.DELETE_PRODUCT(productToDelete.id), { method: 'DELETE' });
+      await removeProduct(productToDelete.id);
       setShowConfirmDelete(false);
       fetchProducts();
     } catch (error) {
@@ -69,11 +66,7 @@ const ProductList = ({ refresh }) => {
   const handleEdit = async () => {
     try {
       const productData = { name, price: parseFloat(price) };
-      await fetch(API_ENDPOINTS.UPDATE_PRODUCT(productToEdit.id), {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData),
-      });
+      await editProduct(productToEdit.id, productData);
       setShowEditModal(false);
       fetchProducts();
     } catch (error) {

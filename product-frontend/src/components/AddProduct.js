@@ -1,24 +1,20 @@
 import React, { useState} from 'react';
-import axios from 'axios';
-import API_ENDPOINTS from '../config/apiConfig.js';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Modal, Button, Form, Container } from 'react-bootstrap';
+import { addProduct } from '../services/ProductService';
 
 const AddProduct = ({ setKey }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
-  const navigate = useNavigate();
-  const { id } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const productData = { name, price: parseFloat(price) };      
-      await axios.post(API_ENDPOINTS.CREATE_PRODUCT, productData);
+      const productData = { name, price: parseFloat(price) };
+      await addProduct(productData);
       setShowSuccess(true);
-      handleClear();
+      handleClear();      
     } catch (error) {
       console.error('Error saving product:', error);
       setShowError(true);
