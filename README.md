@@ -49,13 +49,13 @@ dotnet restore
 ```
 
 - Certifique-se de que o banco de dados está configurado e rode as migrações para criar o banco 
-(ou crie manualmente com o script: [ProductCRUD\database-scripts\CreateDatabase.sql] ):
+(ou crie manualmente com o script: *ProductCRUD\database-scripts\CreateDatabase.sql* ):
 
 ```bash
 dotnet ef database update
 ```
 
-- Se precisar de dados para teste use o script: [ProductCRUD\database-scripts\InsertData.sql]
+- Se precisar de dados para teste use o script: *ProductCRUD\database-scripts\InsertData.sql*
 
 #### 3. Rodando a Aplicação:
 
