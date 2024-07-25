@@ -1,6 +1,7 @@
 import React, { useState} from 'react';
 import { Modal, Button, Form, Container } from 'react-bootstrap';
 import { addProduct } from '../services/ProductService';
+import '../styles/ProductList.css';
 
 const AddProduct = ({ setKey }) => {
   const [name, setName] = useState('');
@@ -28,33 +29,35 @@ const AddProduct = ({ setKey }) => {
 
   return (
     <Container className="mt-3">
-      <h1>Adicionar Produto</h1>
+      <h3>Adicionar Produto</h3>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formProductName">
           <Form.Label>Nome</Form.Label>
           <Form.Control
             type="text"
+            placeholder="Digite o nome do produto"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
         </Form.Group>
 
-        <Form.Group controlId="formProductPrice">
+        <Form.Group controlId="formProductPrice" className="mt-3">
           <Form.Label>Valor</Form.Label>
           <Form.Control
             type="number"
+            placeholder="Digite o preço do produto"
             step="0.01"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            required
+            required            
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" className="mt-3">
           Salvar
         </Button>
-        <Button variant="secondary" className="ml-2" onClick={handleClear}>
+        <Button variant="secondary" className="mt-3" onClick={handleClear}>
           Limpar
         </Button>
       </Form>

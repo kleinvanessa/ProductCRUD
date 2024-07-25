@@ -1,8 +1,6 @@
-/* src/styles/HomePage.css */
-
 body {
-    font-family: 'Roboto', sans-serif; /* Fonte personalizada */
-    background-color: #f8f9fa; /* Fundo claro para contraste */
+    font-family: 'Roboto', sans-serif; 
+    background-color: #f8f9fa; 
   }
   
   .container {
@@ -15,7 +13,7 @@ body {
   }
   
   .header {
-    background-color: #800000; /* Vermelho vinho mais forte */
+    background-color: #800000; 
     color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -37,14 +35,14 @@ body {
   .links-container {
     display: flex;
     justify-content: center;
-    gap: 15px; /* Espaçamento entre links */
+    gap: 15px; 
     margin-top: 20px;
   }
   
   .links-container a {
     text-decoration: none;
     color: #fff;
-    background-color: #800000; /* Vermelho vinho mais forte */
+    background-color: #800000; 
     padding: 10px 20px;
     border-radius: 5px;
     font-size: 1.1rem;
@@ -52,8 +50,8 @@ body {
   }
   
   .links-container a:hover {
-    background-color: #660000; /* Tom mais escuro de vermelho vinho */
-    transform: scale(1.05); /* Efeito de aumento ao passar o mouse */
+    background-color: #660000; 
+    transform: scale(1.05); 
   }
   
   @media (max-width: 768px) {

@@ -1,0 +1,18 @@
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination-button {
+    margin: 0 5px;
+  }
+  
+  .pagination-button.active {
+    font-weight: bold;
+  }
+  
+  .pagination-icon {
+    font-size: 16px;
+    color: #c8102e;
+  }
