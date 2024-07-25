@@ -1,19 +1,18 @@
 # Gitignore for both .NET Core (ProductApi) and React (product-frontend)
 
 # Backend (.NET Core)
-ProductApi/bin/
-ProductApi/obj/
-ProductApi/.vs/
-ProductApi/*.user
-ProductApi/*.rsuser
-ProductApi/.idea/
+bin
+obj
+.user
+.rsuser
+.idea/
 
 # Frontend (React)
-product-frontend/node_modules/
-product-frontend/.env
-product-frontend/.env.*.local
-product-frontend/build/
-product-frontend/.DS_Store
+node_modules
+.env
+.env.*.local
+build/
+.DS_Store
 
 # General
 *.log
