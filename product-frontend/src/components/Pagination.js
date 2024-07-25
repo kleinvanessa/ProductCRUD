@@ -14,6 +14,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
         className="pagination-button"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
+        aria-label="Previous page"
       >
         <FontAwesomeIcon icon={faArrowLeft} className="pagination-icon" />
       </Button>
@@ -32,6 +33,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
         className="pagination-button"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
+        aria-label="Next page"
       >
         <FontAwesomeIcon icon={faArrowRight} className="pagination-icon" />
       </Button>
