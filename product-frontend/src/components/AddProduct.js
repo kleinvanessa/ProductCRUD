@@ -3,7 +3,7 @@ import { Modal, Button, Form, Container } from 'react-bootstrap';
 import { addProduct } from '../services/ProductService';
 import '../styles/ProductList.css';
 
-const AddProduct = ({ setKey }) => {
+const AddProduct = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);

@@ -5,7 +5,7 @@ import ProductForm from '../components/AddProduct.js';
 import '../styles/HomePage.css';
 
 const HomePage = () => {
-  const [key, setKey] = useState('list');
+  const [key, setKey] = useState('products-list');
   const [refresh, setRefresh] = useState(false);
 
   return (
@@ -20,16 +20,16 @@ const HomePage = () => {
         activeKey={key}
         onSelect={(k) => {
           setKey(k);
-          if (k === 'list') {
+          if (k === 'products-list') {
             setRefresh(!refresh);
           }
         }}
         className="mb-3"
       >
-        <Tab eventKey="list" title="Lista de Produtos">
+        <Tab eventKey="products-list" title="Lista de Produtos">
           <ProductList key={refresh} />
         </Tab>
-        <Tab eventKey="add" title="Adicionar Produto">
+        <Tab eventKey="add-product" title="Adicionar Produto">
           <ProductForm setKey={setKey} />
         </Tab>
       </Tabs>
